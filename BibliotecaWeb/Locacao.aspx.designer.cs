@@ -13,22 +13,22 @@ namespace BibliotecaWeb {
     public partial class Locacao {
         
         /// <summary>
-        /// Controle rgusuarioLabel.
+        /// Controle cpfusuarioLabel.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label rgusuarioLabel;
+        protected global::System.Web.UI.WebControls.Label cpfusuarioLabel;
         
         /// <summary>
-        /// Controle rgusuarioTextBox.
+        /// Controle CPF.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox rgusuarioTextBox;
+        protected global::System.Web.UI.WebControls.TextBox CPF;
         
         /// <summary>
         /// Controle pesquisarButton.
@@ -49,6 +49,15 @@ namespace BibliotecaWeb {
         protected global::System.Web.UI.WebControls.Label mensagemLabel;
         
         /// <summary>
+        /// Controle locacaoGridView.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView locacaoGridView;
+        
+        /// <summary>
         /// Controle Button.
         /// </summary>
         /// <remarks>
@@ -58,12 +67,12 @@ namespace BibliotecaWeb {
         protected global::System.Web.UI.WebControls.Button Button;
         
         /// <summary>
-        /// Controle locacaoGridView.
+        /// Controle ExcluirButton.
         /// </summary>
         /// <remarks>
         /// Campo gerado automaticamente.
         /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView locacaoGridView;
+        protected global::System.Web.UI.WebControls.Button ExcluirButton;
     }
 }

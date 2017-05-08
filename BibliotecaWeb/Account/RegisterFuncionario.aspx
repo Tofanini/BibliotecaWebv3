@@ -66,7 +66,7 @@
 		<div class="form-group">
             <asp:Label runat="server"  Font-Bold="true" CssClass="col-md-2 control-label">Data de Nascimento</asp:Label>
             <div class="col-md-10">
-                <asp:TextBox runat="server" ID="datanascimentoTextBox" CssClass="form-control" />
+                <asp:TextBox runat="server" ID="datanascimentoTextBox" CssClass="form-control" ClientIDMode="Static" />
                 <asp:RequiredFieldValidator runat="server" ControlToValidate="datanascimentoTextBox"
                     CssClass="text-danger" Display="Dynamic" ErrorMessage="O campo Data de Nascimento é obrigatório." />
             
@@ -76,7 +76,7 @@
 		<div class="form-group">
             <asp:Label runat="server" Font-Bold="true" CssClass="col-md-2 control-label">RG</asp:Label>
             <div class="col-md-10">
-                <asp:TextBox runat="server" ID="RG" CssClass="form-control" />
+                <asp:TextBox runat="server" ID="RG" CssClass="form-control" ClientIDMode="Static"/>
                 <asp:RequiredFieldValidator runat="server" ControlToValidate="RG"
                     CssClass="text-danger" Display="Dynamic" ErrorMessage="O campo RG é obrigatório." />
             
@@ -87,7 +87,7 @@
             <asp:Label runat="server" Font-Bold="true"
 				CssClass="col-md-2 control-label">CPF</asp:Label>
             <div class="col-md-10">
-                <asp:TextBox runat="server" ID="CPF" CssClass="form-control" onblur="javascript:if(!valida_cpf(this.value))alert('CPF inválido!');"/>
+                <asp:TextBox runat="server" ID="CPF" CssClass="form-control" ClientIDMode="Static" onblur="javascript:if(!valida_cpf(this.value))alert('CPF inválido!');"/>
                 <asp:RequiredFieldValidator runat="server" ControlToValidate="CPF"
                     CssClass="text-danger" Display="Dynamic" ErrorMessage="O campo CPF é obrigatório." />
             
@@ -121,7 +121,7 @@
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <asp:Button runat="server" OnClick="CreateUser_Click" Text="Register" CssClass="btn btn-default" />
+                <asp:Button runat="server" OnClick="CreateUser_Click" Text="Cadastrar" CssClass="btn btn-default" />
             </div>
         </div>
     </div>

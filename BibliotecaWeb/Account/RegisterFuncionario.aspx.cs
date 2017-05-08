@@ -33,6 +33,16 @@ namespace BibliotecaWeb.Account
 				{
 					using (var cmd = new SqlCommand("PROC_INSERT_FUNCIONARIO", cn))
 					{
+
+
+						var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
+						var signInManager = Context.GetOwinContext().Get<ApplicationSignInManager>();
+						var user = new ApplicationUser() { UserName = nomeTextBox.Text, Email = Email.Text };
+						IdentityResult result = manager.Create(user, Password.Text);
+
+						if (result.Succeeded)
+						{
+
 						cmd.CommandType = CommandType.StoredProcedure;
 						cmd.Parameters.AddWithValue("@nome", nomeTextBox.Text);
 						cmd.Parameters.AddWithValue("@datanasc", datanascimentoTextBox.Text);
@@ -41,20 +51,14 @@ namespace BibliotecaWeb.Account
 						cmd.Parameters.AddWithValue("@email", Email.Text);
 						cmd.Parameters.AddWithValue("@senha", Password.Text);
 						cmd.Parameters.AddWithValue("@confirmasenha", ConfirmPassword.Text);
-
-						cn.Open();
+						cmd.Parameters.AddWithValue("@idFuncionario", user.Id);
+							cn.Open();
 
 
 
 						cmd.ExecuteNonQuery();
 
-						var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
-						var signInManager = Context.GetOwinContext().Get<ApplicationSignInManager>();
-						var user = new ApplicationUser() { UserName = Email.Text, Email = Email.Text };
-						IdentityResult result = manager.Create(user, Password.Text);
-
-						if (result.Succeeded)
-						{
+						
 							IdentityResult createRoleResult = null;
 							var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
 							if (!roleManager.RoleExists(Roles.Funcionario.ToString()))

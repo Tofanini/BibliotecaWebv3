@@ -4,26 +4,54 @@
 
 	<h2><%: Page.Title %></h2>
 
+	<script src="../Scripts/jquery-3.1.1.min.js"></script>
+     <script src="../Scripts/jquery.maskedinput.min.js"></script>
 
+	<script type="text/javascript">
+		jQuery(function ($) {
+			$("#CPF").mask("999.999.999-99");
+
+		});
+    </script>
 
 
 	<script type="text/javascript">
 		$(document).ready(function () {
+			$("input[type=checkbox]").addClass("EventoCheckBox")
+			$('#CheckBoxSelectAll').click(function () {
+				if (this.checked) {
+					$('.EventoCheckBox').each(function () {
+						this.checked = true;
+					});
+				} else {
+					$('.EventoCheckBox').each(function () {
+						this.checked = false;
+					});
+				}
+			});
+
+		});
+
+
+
+		$(document).ready(function () {
 
 			$("input[type=checkbox]").addClass("EventoCheckBox")
 			$("#Button").hide();
+			$("#ExcluirButton").hide();
 			$(".EventoCheckBox").click(function () {
 				if ($(this).is(":checked")) {
 
 					$("#Button").show();
-					//$("#Button").removeProp("Visible", false);
-					//$("#Button").prop("Visible", true);
+					$("#ExcluirButton").show();
+					
 				} else {
 
 
-					//$("#Button").prop("Visible", false);
+					
 
 					$("#Button").hide();
+					$("#ExcluirButton").hide();
 				};
 			});
 		});
@@ -32,29 +60,17 @@
 
 	</script>
 
-
-	<%--<script type="text/javascript">
-		$(function () {
-			document.getElementById('<%=alocarButton.ClientID %>').style.visibility = "hidden";
-		$(function unhide(){
-			if (document.getElementById('CheckBox2').checked = true) {
-
-				document.getElementById('<%=alocarButton.ClientID %>').style.visibility = "visible";
-				}
-			});
-		});
-
-		
-		</script>--%>
+	
+	
 
 
 
 	<div>
-		<asp:Label ID="rgusuarioLabel" runat="server" Text="RG do usuário"></asp:Label>
+		<asp:Label ID="cpfusuarioLabel" runat="server" Text="CPF do usuário"></asp:Label>
 
 		<div>
 
-			<asp:TextBox ID="rgusuarioTextBox" runat="server"></asp:TextBox>
+			<asp:TextBox ID="CPF" runat="server" ClientIDMode="Static"></asp:TextBox>
 		</div>
 
 	</div>
@@ -75,15 +91,10 @@
 	</div>
 	<br />
 	<br />
-	<div>
-			<asp:Button ID="Button" runat="server" Text="Alocar" OnClick="AlocarButton_Click" CssClass="btn btn-default" ClientIDMode="static"/>
-		</div>
+	
 
 	<div>
-		<br />
 
-		
-		<br />
 
 		<asp:GridView ID="locacaoGridView" runat="server" AutoGenerateColumns="False" CellPadding="4" ForeColor="#333333" Width="530px" AllowSorting="True" BorderStyle="Solid" EmptyDataText="Nenhum resultado encontrado.">
 			<AlternatingRowStyle BackColor="White" />
@@ -93,7 +104,7 @@
 
 				<asp:TemplateField>
 					<HeaderTemplate>
-						<asp:CheckBox ID="CheckBox2" runat="server" />
+						<asp:CheckBox ID="CheckBoxSelectAll" runat="server" ClientIDMode="static" />
 					</HeaderTemplate>
 					<ItemTemplate>
 						<asp:CheckBox ID="CheckBox1" runat="server" ClientIDMode="static"  />
@@ -103,7 +114,7 @@
 				<asp:BoundField DataField="Autor" HeaderText="Autor" />
 				<asp:BoundField DataField="Titulo" HeaderText="Título" />
 				<asp:BoundField DataField="Nome" HeaderText="Locatário" />
-				<asp:BoundField DataField="RG" HeaderText="RG" />
+				<asp:BoundField DataField="CPF" HeaderText="CPF" />
 
 
 				<asp:HyperLinkField Text="Detalhes..." DataNavigateUrlFields="idLivro" DataNavigateUrlFormatString="DetalhesLivro.aspx?idLivro={0}" NavigateUrl="~/DetalhesLivro.aspx" />
@@ -139,6 +150,9 @@
 
 	</div>
 
-
+	<div>
+			<asp:Button ID="Button" runat="server" Text="Alocar" OnClick="AlocarButton_Click" CssClass="btn btn-default" ClientIDMode="static" CssClassDisabled="false"/>
+		<asp:Button ID="ExcluirButton" runat="server" Text="Excluir" OnClick="ExcluirButton_Click" CssClass="btn btn-default" ClientIDMode="static" CssClassDisabled="false"/>
+		</div>
 
 </asp:Content>

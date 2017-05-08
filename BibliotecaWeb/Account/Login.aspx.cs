@@ -21,6 +21,8 @@ namespace BibliotecaWeb.Account
 		protected void Page_Load(object sender, EventArgs e)
 		{
 
+			
+
 
 			RegisterHyperLink.NavigateUrl = "Register";
 			// Enable this once you have account confirmation enabled for password reset functionality

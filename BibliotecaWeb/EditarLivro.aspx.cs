@@ -82,7 +82,7 @@ namespace BibliotecaWeb
                 //cria a conexão com o banco de dados 
                 using (var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["Biblioteca"].ConnectionString))
                 {
-                    using (var cmd = new SqlCommand("UPDATE_LIVRO", cn))
+                    using (var cmd = new SqlCommand("PROC_UPDATE_LIVRO", cn))
                     {
 
 

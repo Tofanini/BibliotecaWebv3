@@ -305,7 +305,6 @@
     <Content Include="App_Themes\Tema\Default.css" />
     <Content Include="CadastroEditora.aspx" />
     <Content Include="CadastroLivro.aspx" />
-    <Content Include="CadastroUsuario.aspx" />
     <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -567,13 +566,6 @@
     </Compile>
     <Compile Include="CadastroLivro.aspx.designer.cs">
       <DependentUpon>CadastroLivro.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="CadastroUsuario.aspx.cs">
-      <DependentUpon>CadastroUsuario.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="CadastroUsuario.aspx.designer.cs">
-      <DependentUpon>CadastroUsuario.aspx</DependentUpon>
     </Compile>
     <Compile Include="Contact.aspx.cs">
       <DependentUpon>Contact.aspx</DependentUpon>

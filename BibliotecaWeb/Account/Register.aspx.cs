@@ -11,11 +11,14 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using BibliotecaWeb.Enum;
 using System.Linq;
 using System.Text;
+using Microsoft.Ajax.Utilities;
+using System.Data.Entity.Infrastructure;
 
 namespace BibliotecaWeb.Account
 {
 	public partial class Register : Page
 	{
+		
 
 
 		protected void CreateUser_Click(object sender, EventArgs e)
@@ -25,94 +28,139 @@ namespace BibliotecaWeb.Account
 			try
 			{
 
-				
+
 
 				using (var cn = new SqlConnection(
 				  ConfigurationManager.ConnectionStrings["Biblioteca"].ConnectionString))
+
+
+
+
+
 				{
-					using (var cmd = new SqlCommand("PROC_INSERT_USUARIO", cn))
+					cn.Open();
+
+					string consulta = "SELECT CPF from Usuario where CPF = @cpf";
+
+
+					SqlCommand cmd = new SqlCommand(consulta, cn);
+
+
+					//Passo o parametro
+					cmd.Parameters.AddWithValue("@cpf", CPF.Text);
+
+					SqlDataReader read = cmd.ExecuteReader();
+
+					//SE EXISTIR ELE ENTRA NO IF
+					if (read.Read())
 					{
-						
+						ErrorMessage.Text = ("CPF já cadastrado");
 
 
+						read.Close();
+						cn.Close();
 
-						
-						var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
-						var signInManager = Context.GetOwinContext().Get<ApplicationSignInManager>();
-						var user = new ApplicationUser() { UserName = Email.Text, Email = Email.Text };
-						IdentityResult result = manager.Create(user, Password.Text);
+						//aqui você colocaria a pagina na qual vai redirecionar caso o usuário exista...
+					}
 
-						if (result.Succeeded)
+					//SENÃO NÃO ENTRA
+					else
+					{
+
+
+						using (var cn2 = new SqlConnection(
+						  ConfigurationManager.ConnectionStrings["Biblioteca"].ConnectionString))
+						using (var cmd2 = new SqlCommand("PROC_INSERT_USUARIO", cn2))
 						{
-							//byte[] theBytes = Encoding.UTF8.GetBytes(Password.Text);
-							//var senha = Convert.ToChar(Password.Text).ToString();
-							//var confirmasenha = Convert.ToChar(ConfirmPassword.Text).ToString();
-							cmd.CommandType = CommandType.StoredProcedure;
-							cmd.Parameters.AddWithValue("@nome", nomeTextBox.Text);
-							cmd.Parameters.AddWithValue("@datanasc", datanascimentoTextBox.Text);
-							cmd.Parameters.AddWithValue("@rg", RG.Text);
-							cmd.Parameters.AddWithValue("@cpf", CPF.Text);
-							cmd.Parameters.AddWithValue("@email", Email.Text);
-							cmd.Parameters.AddWithValue("@senha", Password.Text);
-							cmd.Parameters.AddWithValue("@confirmasenha", ConfirmPassword.Text);
-							cmd.Parameters.AddWithValue("@idUsuario", user.Id);
-							cn.Open();
-							
-							cmd.ExecuteNonQuery();
-							IdentityResult createRoleResult = null;
-							var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
-							if (!roleManager.RoleExists(Roles.Estudante.ToString()))
+
+							cn2.Open();
+
+							var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
+							var signInManager = Context.GetOwinContext().Get<ApplicationSignInManager>();
+							var user = new ApplicationUser() { UserName = nomeTextBox.Text, Email = Email.Text };
+							IdentityResult result = manager.Create(user, Password.Text);
+
+
+							if (result.Succeeded)
 							{
-								createRoleResult = roleManager.Create(new IdentityRole(Roles.Estudante.ToString()));
-							}
-							if (createRoleResult.Succeeded)
-							{
+
+
+
+								cmd2.CommandType = CommandType.StoredProcedure;
+								cmd2.Parameters.AddWithValue("@nome", nomeTextBox.Text);
+								cmd2.Parameters.AddWithValue("@datanasc", datanascimentoTextBox.Text);
+								cmd2.Parameters.AddWithValue("@rg", RG.Text);
+								cmd2.Parameters.AddWithValue("@cpf", CPF.Text);
+								cmd2.Parameters.AddWithValue("@email", Email.Text);
+								cmd2.Parameters.AddWithValue("@senha", Password.Text);
+								cmd2.Parameters.AddWithValue("@confirmasenha", ConfirmPassword.Text);
+								cmd2.Parameters.AddWithValue("@idUsuario", user.Id);
+
+
+
+								cmd2.ExecuteNonQuery();
+
+								read.Close();
+								IdentityResult createRoleResult = null;
+								var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
+								if (!roleManager.RoleExists(Roles.Estudante.ToString()))
+								{
+									createRoleResult = roleManager.Create(new IdentityRole(Roles.Estudante.ToString()));
+								}
+								//if (createRoleResult.Succeeded)
+								
 								var addToRoleResult = manager.AddToRole(user.Id, Roles.Estudante.ToString());
+								
+
+
+								// For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
+								string code = manager.GenerateEmailConfirmationToken(user.Id);
+								string callbackUrl = IdentityHelper.GetUserConfirmationRedirectUrl(code, user.Id, Request);
+								manager.SendEmail(user.Id, "Confirmação de conta", "Por favor, confirme sua conta clicando <a href=\"" + callbackUrl + "\">aqui</a>.");
+
+								if (user.EmailConfirmed)
+								{
+									var resultSignIn = signInManager.PasswordSignIn(Email.Text, Password.Text, false, shouldLockout: false);
+									SigninValidation(resultSignIn);
+								}
+								else
+								{
+									ErrorMessage.Text = "Um email foi enviado para sua conta. Por favor, veja o seu email e confirme sua conta para completar o processo de cadastro.";
+								}
+
 							}
 
 
-							// For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-							string code = manager.GenerateEmailConfirmationToken(user.Id);
-							string callbackUrl = IdentityHelper.GetUserConfirmationRedirectUrl(code, user.Id, Request);
-							manager.SendEmail(user.Id, "Confirmação de conta", "Por favor, confirme sua conta clicando <a href=\"" + callbackUrl + "\">aqui</a>.");
 
-							if (user.EmailConfirmed)
-							{
-								var resultSignIn = signInManager.PasswordSignIn(Email.Text, Password.Text, false, shouldLockout: false);
-								SigninValidation(resultSignIn);
-							}
+
 							else
+
 							{
-								ErrorMessage.Text = "Um email foi enviado para sua conta. Por favor, veja o seu email e confirme sua conta para completar o processo de cadastro.";
+								ErrorMessage.Text = result.Errors.ToList().FirstOrDefault().ToString();
 							}
 
+
+
+
+
+
+							if (cn.State != ConnectionState.Closed)
+							{ cn2.Close(); }
 						}
-
-
-
-						else
-
-							{
-							ErrorMessage.Text = result.Errors.ToList().FirstOrDefault().ToString();
-							}
-
-
-						
-
-
-
-						if (cn.State != ConnectionState.Closed)
-						{ cn.Close(); }
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				throw ex;
+
+				ErrorMessage.Text = "Ops!Umerro ocorreu.";
+
 			}
 
 
 		}
+
+		
 
 		private void SigninValidation(SignInStatus result)
 		{
@@ -122,9 +170,9 @@ namespace BibliotecaWeb.Account
 
 					IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
 					break;
-				case SignInStatus.LockedOut:
-					Response.Redirect("/Account/Lockout");
-					break;
+				//case SignInStatus.LockedOut:
+				//	Response.Redirect("/Account/Lockout");
+				//	break;
 				case SignInStatus.RequiresVerification:
 					Response.Redirect(String.Format("/Account/TwoFactorAuthenticationSignIn?ReturnUrl={0}&RememberMe={1}",
 													Request.QueryString["ReturnUrl"],
@@ -141,5 +189,7 @@ namespace BibliotecaWeb.Account
 		}
 
 
+
 	}
 }
+
