@@ -77,7 +77,7 @@ namespace BibliotecaWeb.Account
 
 							var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
 							var signInManager = Context.GetOwinContext().Get<ApplicationSignInManager>();
-							var user = new ApplicationUser() { UserName = nomeTextBox.Text, Email = Email.Text };
+							var user = new ApplicationUser() { UserName = Email.Text, Email = Email.Text };
 							IdentityResult result = manager.Create(user, Password.Text);
 
 
@@ -153,7 +153,7 @@ namespace BibliotecaWeb.Account
 			catch (Exception ex)
 			{
 
-				ErrorMessage.Text = "Ops!Umerro ocorreu.";
+				ErrorMessage.Text = "Ops!Um erro ocorreu.";
 
 			}
 

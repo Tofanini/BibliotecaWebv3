@@ -23,7 +23,7 @@
 		<div>
 			<asp:Label ID="tituloLabel" runat="server" Text="Título" Font-Bold="true" BackColor="Snow" Font-Size="X-Large"></asp:Label>
 			<div>
-				<asp:TextBox ID="tituloTextBox" runat="server" CssClass="form"></asp:TextBox>
+				<asp:TextBox ID="tituloTextBox" runat="server" CssClass="form" ></asp:TextBox>
 
 
 			</div>
@@ -34,7 +34,7 @@
 		<div>
 			<asp:Label ID="nomeEditoraLabel" runat="server" Text="Editora" BackColor="Snow" Font-Bold="true" Font-Size="X-Large"></asp:Label>
 		<div>
-				<asp:TextBox ID="editoraTextBox" runat="server" CssClass="form"></asp:TextBox>
+				<asp:TextBox ID="editoraTextBox" runat="server" CssClass="form" ></asp:TextBox>
 
 
 			</div>
@@ -45,7 +45,7 @@
 		<div>
 			<asp:Label ID="assuntoLabel" runat="server" Text="Assunto" BackColor="Snow" Font-Bold="true" Font-Size="X-Large"></asp:Label>
 		<div>
-				<asp:TextBox ID="assuntoTextBox" runat="server" CssClass="form"></asp:TextBox>
+				<asp:TextBox ID="assuntoTextBox" runat="server" CssClass="form" ></asp:TextBox>
 
 
 			</div>
@@ -90,10 +90,14 @@
 			<asp:TemplateField ShowHeader="False">
 				
 				<ItemTemplate>
+
+					 <%if (Context.User.IsInRole("Estudante"))
+						 { %>
 					<% if (Context.User.Identity.IsAuthenticated)
-						{ %>
+																  { %>
 					<asp:LinkButton ID="Button_Reservar" runat="server" Text="Reservar" OnCommand="Button_Click" CommandArgument='<%# Eval("idLivro") %>'></asp:LinkButton>
-					<% } %>
+					<% }
+																  }%>
 				</ItemTemplate>
 			</asp:TemplateField>
 

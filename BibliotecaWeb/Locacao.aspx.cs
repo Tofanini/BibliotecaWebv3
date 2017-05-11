@@ -9,7 +9,6 @@ using System.Data.SqlClient;
 using System.Configuration;
 using System.Data;
 using Microsoft.AspNet.Identity;
-using System.Globalization;
 
 namespace BibliotecaWeb
 {
@@ -33,7 +32,7 @@ namespace BibliotecaWeb
 				using (var cn = new SqlConnection(
 				  ConfigurationManager.ConnectionStrings["Biblioteca"].ConnectionString))
 				{
-					using (var cmd = new SqlCommand("SELECT asp.Id, r.idReserva, r.idLivro, l.Autor, l.Titulo, u.Nome, u.CPF from AspNetUsers as asp, Reserva as r, Livro as l, Usuario as u where r.idLocatario = asp.Id AND r.idLivro = l.idLivro AND CPF = @cpf ", cn))
+					using (var cmd = new SqlCommand("SELECT asp.Id, r.idReserva, r.idLivro, l.Autor, l.Titulo, u.Nome, u.CPF from AspNetUsers as asp, Reserva as r, Livro as l, Usuario as u where r.idLocatario = asp.Id AND r.idLivro = l.idLivro AND asp.Id = u.idUsuario AND CPF = @cpf ", cn))
 					{
 						cn.Open();
 
@@ -85,15 +84,15 @@ namespace BibliotecaWeb
 
 			var DataEntrega = System.DateTime.Now.AddDays(7).Date;
 
-			var idFuncionario = Context.User.Identity.GetUserName().Trim();
+			var idFuncionario = Context.User.Identity.GetUserId().Trim();
 
-			var idUsuario = Context.User.Identity.GetUserName().Trim();//Ajustar para o ID do usuario.
+			var idUsuario = Context.User.Identity.GetUserId().Trim();//Ajustar para o ID do usuario.
 
-			
+
 
 			try
 			{
-				
+
 				foreach (GridViewRow row in locacaoGridView.Rows)
 				{
 					if (row.RowType == DataControlRowType.DataRow)
@@ -126,10 +125,14 @@ namespace BibliotecaWeb
 
 									cmd.ExecuteNonQuery();
 
+
+
 									if (cn.State != ConnectionState.Closed)
 									{ cn.Close(); }
 
-							}
+									mensagemLabel.Text = "Livro alocado com sucesso!";
+
+								}
 
 							}
 
@@ -152,6 +155,60 @@ namespace BibliotecaWeb
 		protected void ExcluirButton_Click(object sender, EventArgs e)
 		{
 
+
+			try
+			{
+
+				foreach (GridViewRow row in locacaoGridView.Rows)
+				{
+					if (row.RowType == DataControlRowType.DataRow)
+					{
+						CheckBox chkRow = (row.Cells[0].FindControl("CheckBox1") as CheckBox);
+						if (chkRow.Checked)
+
+
+						{
+							var idLivro = Convert.ToInt32(row.Cells[1].Text);
+
+							using (var cn = new SqlConnection(
+				  ConfigurationManager.ConnectionStrings["Biblioteca"].ConnectionString))
+							{
+								using (SqlCommand cmd = new SqlCommand("DELETE FROM Reserva WHERE IdLivro = @idLivro", cn))
+								{
+									cmd.CommandType = CommandType.Text;
+									cmd.Parameters.AddWithValue("@idLivro", idLivro);
+									cn.Open();
+									cmd.ExecuteNonQuery();
+									locacaoGridView.DataBind();
+
+									cn.Close();
+								}
+
+								mensagemLabel.Text = "Registro excluído com sucesso!";
+							}
+						}
+
+					
+
+						//Implementar o Refresh da pagina para atualizar o grid em tempo real.
+
+
+
+
+
+
+
+					}
+				}
+			}
+
+
+
+			catch (Exception ex)
+			{
+				mensagemLabel.Text = ex.Message;
+				mensagemLabel.ForeColor = Color.Red;
+			}
 		}
 
 	}

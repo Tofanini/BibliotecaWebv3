@@ -119,13 +119,13 @@ namespace BibliotecaWeb
                 using (var cn = new SqlConnection(
                   ConfigurationManager.ConnectionStrings["Biblioteca"].ConnectionString))
                 {
-                    using (var cmd = new SqlCommand("INSERT INTO Reserva (idLivro, idLocatario, DataReserva) VALUES (@idLivro, @idLocatario, GETDATE())", cn))
+                    using (var cmd = new SqlCommand("PROC_INSERT_RESERVA", cn))
                     {
 
                         cn.Open();
 
 
-                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandType = CommandType.StoredProcedure;
 
                         for (int i = 0; i < livrosGridView.Rows.Count; i++)
                         {
@@ -135,9 +135,10 @@ namespace BibliotecaWeb
                                 Convert.ToInt32(livrosGridView.Rows[i].Cells[0].Text));
                             cmd.Parameters.AddWithValue("@idLocatario",
                                 Context.User.Identity.GetUserId());
+							cmd.Parameters.AddWithValue("@DataReserva", DateTime.Now.ToString());
 
 
-                            cmd.ExecuteNonQuery();
+							cmd.ExecuteNonQuery();
 
                             mensagemLabel.Text = ("Livro Reservado!");
                         }

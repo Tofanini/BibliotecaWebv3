@@ -152,7 +152,7 @@
 
 	<div>
 			<asp:Button ID="Button" runat="server" Text="Alocar" OnClick="AlocarButton_Click" CssClass="btn btn-default" ClientIDMode="static" CssClassDisabled="false"/>
-		<asp:Button ID="ExcluirButton" runat="server" Text="Excluir" OnClick="ExcluirButton_Click" CssClass="btn btn-default" ClientIDMode="static" CssClassDisabled="false"/>
+		<asp:Button ID="ExcluirButton" runat="server" Text="Excluir" onClick="ExcluirButton_Click" CssClass="btn btn-default" ClientIDMode="static" CssClassDisabled="false"/>
 		</div>
 
 </asp:Content>
