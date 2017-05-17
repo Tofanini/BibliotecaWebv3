@@ -10,8 +10,8 @@
 	<style type="text/css">
 	#clock_tm {
 		position:absolute;
-		left:50%;
-		top:50%;
+		left:80%;
+		top:35%;
 		margin-left:-90px;
 		margin-top:-80px;
 		font-size:xx-large;
@@ -19,8 +19,8 @@
 
 	#clock_dt {
 		position:absolute;
-		left:50%;
-		top:50%;
+		left:80%;
+		top:35%;
 		margin-left:-110px;
 		margin-top:-50px;
 		font-size:xx-large;

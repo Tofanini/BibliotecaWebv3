@@ -115,6 +115,7 @@
 				<asp:BoundField DataField="Titulo" HeaderText="Título" />
 				<asp:BoundField DataField="Nome" HeaderText="Locatário" />
 				<asp:BoundField DataField="CPF" HeaderText="CPF" />
+				<asp:BoundField DataField="idUsuario" HeaderText="Inscrição" />
 
 
 				<asp:HyperLinkField Text="Detalhes..." DataNavigateUrlFields="idLivro" DataNavigateUrlFormatString="DetalhesLivro.aspx?idLivro={0}" NavigateUrl="~/DetalhesLivro.aspx" />
@@ -151,8 +152,12 @@
 	</div>
 
 	<div>
+		<%if (Context.User.Identity.GetUserId() != null)
+			{%>
 			<asp:Button ID="Button" runat="server" Text="Alocar" OnClick="AlocarButton_Click" CssClass="btn btn-default" ClientIDMode="static" CssClassDisabled="false"/>
-		<asp:Button ID="ExcluirButton" runat="server" Text="Excluir" onClick="ExcluirButton_Click" CssClass="btn btn-default" ClientIDMode="static" CssClassDisabled="false"/>
+			<asp:Button ID="ExcluirButton" runat="server" Text="Excluir" onClick="ExcluirButton_Click" CssClass="btn btn-default" ClientIDMode="static" CssClassDisabled="false"/>
+
+		<%} %>
 		</div>
 
 </asp:Content>

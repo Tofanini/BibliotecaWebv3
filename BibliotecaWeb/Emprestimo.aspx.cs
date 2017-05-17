@@ -30,17 +30,17 @@ namespace BibliotecaWeb
 			using (var cn = new SqlConnection(
 			  ConfigurationManager.ConnectionStrings["Biblioteca"].ConnectionString))
 			{
-				using (var cmd = new SqlCommand("SELECT lo.idLivro, lo.DataEntrega, l.Titulo, u.Nome, u.CPF from Locacao as lo, Livro as l, Usuario as u where lo.idLivro = l.idLivro AND CPF = @cpf ", cn))
+				using (var cmd = new SqlCommand("SELECT lo.idLivro, lo.DataEntrega, l.Titulo, u.Nome, u.CPF from Locacao as lo, Livro as l, Usuario as u where lo.idLivro = l.idLivro AND u.idUsuario = lo.idUsuario AND u.CPF = @cpf", cn))
 				{
 					cn.Open();
 
 					cmd.CommandType = CommandType.Text;
-					cmd.Parameters.AddWithValue("@cpf", CPF.Text);
+						cmd.Parameters.AddWithValue("@cpf", CPF.Text);
 
 
 
 
-					cmd.ExecuteNonQuery();
+						cmd.ExecuteNonQuery();
 
 					using (DataTable Livro = new DataTable())
 					{

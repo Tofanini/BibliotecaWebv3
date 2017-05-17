@@ -32,7 +32,7 @@ namespace BibliotecaWeb
 				using (var cn = new SqlConnection(
 				  ConfigurationManager.ConnectionStrings["Biblioteca"].ConnectionString))
 				{
-					using (var cmd = new SqlCommand("SELECT asp.Id, r.idReserva, r.idLivro, l.Autor, l.Titulo, u.Nome, u.CPF from AspNetUsers as asp, Reserva as r, Livro as l, Usuario as u where r.idLocatario = asp.Id AND r.idLivro = l.idLivro AND asp.Id = u.idUsuario AND CPF = @cpf ", cn))
+					using (var cmd = new SqlCommand("SELECT asp.Id, r.idReserva, r.idLivro, l.Autor, l.Titulo, u.Nome, u.idUsuario, u.CPF from AspNetUsers as asp, Reserva as r, Livro as l, Usuario as u where r.idLocatario = asp.Id AND r.idLivro = l.idLivro AND asp.Id = u.idUsuario AND CPF = @cpf ", cn))
 					{
 						cn.Open();
 
@@ -86,8 +86,8 @@ namespace BibliotecaWeb
 
 			var idFuncionario = Context.User.Identity.GetUserId().Trim();
 
-			var idUsuario = Context.User.Identity.GetUserId().Trim();//Ajustar para o ID do usuario.
 
+			
 
 
 			try
@@ -102,8 +102,9 @@ namespace BibliotecaWeb
 						{
 							var idLivro = Convert.ToInt32(row.Cells[1].Text);
 
-							using (var cn = new SqlConnection(
-					 ConfigurationManager.ConnectionStrings["Biblioteca"].ConnectionString))
+							var idUsuario = row.Cells[6].Text;
+
+							using (var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["Biblioteca"].ConnectionString))
 							{
 
 								//Insere na base de dados;
@@ -125,7 +126,7 @@ namespace BibliotecaWeb
 
 									cmd.ExecuteNonQuery();
 
-
+									ExcluirReserva(idLivro);
 
 									if (cn.State != ConnectionState.Closed)
 									{ cn.Close(); }
@@ -140,11 +141,6 @@ namespace BibliotecaWeb
 					}
 				}
 			}
-
-
-
-
-
 			catch (Exception ex)
 			{
 				mensagemLabel.Text = ex.Message;
@@ -152,6 +148,27 @@ namespace BibliotecaWeb
 			}
 
 		}
+
+		protected void ExcluirReserva(int idLivro) {
+
+
+			using (var cn = new SqlConnection(ConfigurationManager.ConnectionStrings["Biblioteca"].ConnectionString))
+			{
+				using (SqlCommand cmd = new SqlCommand("DELETE FROM Reserva WHERE IdLivro = @idLivro", cn))
+				{
+					cmd.CommandType = CommandType.Text;
+					cmd.Parameters.AddWithValue("@idLivro", idLivro);
+					cn.Open();
+					cmd.ExecuteNonQuery();
+					locacaoGridView.DataBind();
+
+					cn.Close();
+				}
+
+				mensagemLabel.Text = "Registro excluído com sucesso!";
+			}
+		}
+
 		protected void ExcluirButton_Click(object sender, EventArgs e)
 		{
 
@@ -165,45 +182,17 @@ namespace BibliotecaWeb
 					{
 						CheckBox chkRow = (row.Cells[0].FindControl("CheckBox1") as CheckBox);
 						if (chkRow.Checked)
-
-
 						{
 							var idLivro = Convert.ToInt32(row.Cells[1].Text);
 
-							using (var cn = new SqlConnection(
-				  ConfigurationManager.ConnectionStrings["Biblioteca"].ConnectionString))
-							{
-								using (SqlCommand cmd = new SqlCommand("DELETE FROM Reserva WHERE IdLivro = @idLivro", cn))
-								{
-									cmd.CommandType = CommandType.Text;
-									cmd.Parameters.AddWithValue("@idLivro", idLivro);
-									cn.Open();
-									cmd.ExecuteNonQuery();
-									locacaoGridView.DataBind();
+							ExcluirReserva(idLivro);
 
-									cn.Close();
-								}
-
-								mensagemLabel.Text = "Registro excluído com sucesso!";
-							}
+							mensagemLabel.Text = "Registro excluído com sucesso!";
+							
 						}
-
-					
-
-						//Implementar o Refresh da pagina para atualizar o grid em tempo real.
-
-
-
-
-
-
-
 					}
 				}
 			}
-
-
-
 			catch (Exception ex)
 			{
 				mensagemLabel.Text = ex.Message;
